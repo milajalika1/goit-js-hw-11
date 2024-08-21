@@ -1,3 +1,7 @@
+@import 'izitoast/dist/css/iziToast.min.css';
+@import 'simplelightbox/dist/simple-lightbox.min.css';
+
+
 body {
   font-family: 'Montserrat', sans-serif;
   color: #434455;
@@ -47,7 +51,8 @@ img {
 }
 .search-form {
   display: flex;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
   width: 371px;
   height: 40px;
   margin-bottom: 32px;
@@ -84,52 +89,139 @@ img {
       border-style: none;
 }
 
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 0;
+  /* margin-top: 15px; */
+  
+}
+
+.gallery-item {
+  width: calc((100% - 60px) / 4);
+}
+.gallery-image {
+  display: block;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+.wrapper-list {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 28px;
+}
+
+.wrapper-item {
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
+    font-size: 12px;
+    line-height: 1.33;
+    letter-spacing: 0.04em;
+    color: #2e2f42;
+    margin-top: 4px;
+}
+.span-number {
+  font-weight: 400;
+    font-size: 12px;
+    line-height: 2;
+    letter-spacing: 0.04em;
+    color: #2e2f42;
+}
+
 .loader {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  transform: rotateZ(45deg);
+  perspective: 1000px;
+  border-radius: 50%;
   width: 48px;
   height: 48px;
-  border-radius: 50%;
-  position: relative;
-  animation: rotate 1s linear infinite
+  color: #2e2f42;
+  
+  
+}
+.loader.is-hidden {
+  display: none;
 }
 
-.loader::before,
-.loader::after {
-  content: "";
-  box-sizing: border-box;
+.loader:before,
+.loader:after {
+  content: '';
   position: absolute;
-  inset: 0px;
+  top: 0;
+  left: 0;
+  width: inherit;
+  height: inherit;
   border-radius: 50%;
-  border: 5px solid #FFF;
-  animation: prixClipFix 2s linear infinite;
+  transform: rotateX(70deg);
+  animation: 1s spin linear infinite;
 }
 
-.loader::after {
-  inset: 8px;
-  transform: rotate3d(90, 90, 0, 180deg);
-  border-color: #FF3D00;
+.loader:after {
+  color: #2e2f42;
+  transform: rotateY(70deg);
+  animation-delay: .4s;
 }
 
 @keyframes rotate {
   0% {
-    transform: rotate(0deg)
+    transform: translate(-50%, -50%) rotateZ(0deg);
   }
 
   100% {
-    transform: rotate(360deg)
+    transform: translate(-50%, -50%) rotateZ(360deg);
   }
 }
 
-@keyframes prixClipFix {
+@keyframes rotateccw {
   0% {
-    clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0)
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) rotate(-360deg);
+  }
+}
+
+@keyframes spin {
+
+  0%,
+  100% {
+    box-shadow: .2em 0px 0 0px currentcolor;
+  }
+
+  12% {
+    box-shadow: .2em .2em 0 0 currentcolor;
+  }
+
+  25% {
+    box-shadow: 0 .2em 0 0px currentcolor;
+  }
+
+  37% {
+    box-shadow: -.2em .2em 0 0 currentcolor;
   }
 
   50% {
-    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0)
+    box-shadow: -.2em 0 0 0 currentcolor;
   }
 
-  75%,
-  100% {
-    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%)
+  62% {
+    box-shadow: -.2em -.2em 0 0 currentcolor;
+  }
+
+  75% {
+    box-shadow: 0px -.2em 0 0 currentcolor;
+  }
+
+  87% {
+    box-shadow: .2em -.2em 0 0 currentcolor;
   }
 }

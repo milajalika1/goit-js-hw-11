@@ -1,33 +1,57 @@
 import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
-
 import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
+
+import { createGalleryCard } from './js/render-functions';
+import { fetchImages } from './js/pixabay-api';
 
 const searchForm = document.querySelector('.search-form');
 const galleryEl = document.querySelector('.gallery');
-
-const createGalleryCard = (imgInfo) => {
-  return `
-    <li class="gallery-card">
-    <img class="gallery-img" src="" alt="" />
-    </li>`;
-};
+const loaderEl = document.querySelector('.loader');
 
 const onFormSubmit = event => {
   event.preventDefault();
+  galleryEl.innerHTML = '';
+  loaderEl.classList.remove('is-hidden');
   const searchedValue = searchForm.elements.user_query.value;
+  if (searchedValue === '') {
+    iziToast.warning({
+      title: 'Caution',
+      message: 'Fill in the search field',
+      timeout: 2000,
+      position: 'topCenter',
+    });
+    return;
+  }
 
-  fetch(
-    `https://pixabay.com/api/?key=45538852-2ab6a380c393410172122f885&q=${searchedValue}&image_type="photo&orientation="horizontal&safesearch="true"`
-  )
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(response.status);
+  fetchImages(searchedValue)
+    .then(data => {
+      if (data.hits.length === 0) {
+        iziToast.error({
+          title: 'Error',
+          message:
+            'Sorry, there are no images matching your search query. Please try again!',
+          position: 'bottomCenter',
+          timeout: 2000,
+        });
+        galleryEl.innerHTML = '';
+        searchForm.reset();
+
+        return;
       }
-      return response.json();
+      loaderEl.classList.add('is-hidden');
+      
+      const galleryCardsTemplate = data.hits
+        .map(imgDetails => createGalleryCard(imgDetails))
+        .join('');
+      galleryEl.innerHTML = galleryCardsTemplate;
+
+      new SimpleLightbox('.gallery a', {
+        captionsData: 'alt',
+        captionDelay: 250,
+        overlayOpacity: 0.8,
+      }).refresh();
+      searchForm.reset();
     })
-    .then(data => {})
     .catch(err => {});
 };
 
