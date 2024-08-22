@@ -25,12 +25,13 @@ const onFormSubmit = event => {
 
   fetchImages(searchedValue)
     .then(data => {
+      loaderEl.classList.add('is-hidden');
       if (data.hits.length === 0) {
         iziToast.error({
           title: 'Error',
           message:
             'Sorry, there are no images matching your search query. Please try again!',
-          position: 'bottomCenter',
+          position: 'center',
           timeout: 2000,
         });
         galleryEl.innerHTML = '';
@@ -38,8 +39,7 @@ const onFormSubmit = event => {
 
         return;
       }
-      loaderEl.classList.add('is-hidden');
-      
+
       const galleryCardsTemplate = data.hits
         .map(imgDetails => createGalleryCard(imgDetails))
         .join('');
@@ -52,7 +52,16 @@ const onFormSubmit = event => {
       }).refresh();
       searchForm.reset();
     })
-    .catch(err => {});
+    .catch(err => {
+      console.log(err);
+      iziToast.error({
+        title: 'Error',
+        message:
+          'Sorry, there are no images matching your search query. Please try again!',
+        position: 'center',
+        timeout: 2000,
+      });
+    });
 };
 
 searchForm.addEventListener('submit', onFormSubmit);
